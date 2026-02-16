@@ -1,0 +1,20 @@
+[
+  {
+    "name": "SmartWrite Companion",
+    "description": "AI-powered writing companion",
+    "repo_url": "https://github.com/zandercpzed/smartwrite-companion",
+    "id": "smartwrite-companion"
+  },
+  {
+    "name": "SmartWrite Analyzer",
+    "description": "Analyzes text for style and tone",
+    "repo_url": "https://github.com/zandercpzed/smartwrite-analyzer",
+    "id": "smartwrite-analyzer"
+  },
+  {
+    "name": "SmartWrite Publisher",
+    "description": "Publishes articles to Wordpress",
+    "repo_url": "https://github.com/zandercpzed/smartwrite-publisher",
+    "id": "smartwrite-publisher"
+  }
+]
