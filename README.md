@@ -7,7 +7,7 @@ O **SmartWrite Installer** é um utilitário CLI interativo projetado para desco
 ## 🚀 Funcionalidades Principais
 
 - **Auto-Discovery:** Escaneia automaticamente as configurações locais do Obsidian (`obsidian.json`) e localiza todos os cofres do usuário no macOS.
-- **Catálogo em Tempo Real:** Faz o fetch da lista atualizada de plugins disponíveis diretamente do repositório no GitHub (ou usa um catálogo local como fallback).
+- **Catálogo 100% Dinâmico:** Faz uma varredura real em tempo real diretamente na API do GitHub procurando por todos os seus repositórios públicos que contenham "smartwrite" no nome, extraindo seus nomes e descrições originais de seus respectivos manifestos.
 - **Instalação e Atualização Interativas:** Interface colorida no terminal que permite selecionar quais plugins instalar/atualizar via `git clone` e `git pull`.
 
 ## 📦 Lista de Plugins Suportados

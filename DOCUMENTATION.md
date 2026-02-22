@@ -17,15 +17,17 @@ Para funcionar, o ambiente do usuário requer:
 
 ### 2.2 Estrutura de Arquivos:
 * `install.sh`: O script orquestrador.
-* `plugins.json`: O arquivo de catálogo que atua como índice mestre (source of truth) de quais plugins são compatíveis e onde encontrá-los.
+
 
 ## 3. Fluxo Funcional (User Flow)
 
 Quando o usuário executa o `./install.sh`, as seguintes rotinas são disparadas sequencialmente:
 
-### Passo 1: Fetch do Catálogo de Plugins
-* O script tenta acessar a URL oficial em `https://raw.githubusercontent.com/zandercpzed/smartwrite-installer/main/plugins.json`.
-* O script possui um modo de "dogfooding": se o `plugins.json` for encontrado localmente, ele ignora o `curl` remoto e processa o arquivo local via comando `cat`. Isso é muito útil para desenvolvimento (o que permite testar descrições e repositórios não-publicados).
+### Passo 1: Descoberta Dinâmica de Plugins na API do GitHub
+* O instalador faz um request para a API de repositórios do GitHub (`https://api.github.com/users/[REPO_OWNER]/repos`).
+* O `jq` atua como um filtro rigoroso: seleciona apenas repositórios que começam com o regex `^smartwrite(r)?-.*` e ignora o próprio instalador.
+* Para cada repositório válido encontrado, ele faz uma segunda requisição acessando o arquivo `manifest.json` nativo do Obsidian hospedado na branch principal do projeto.
+* É a partir deste arquivo final que ele constrói o array de opções na memória, garantindo que o nome do plugin e a descrição exibida no terminal sejam exatamente os mesmos descritos pelo criador no código fonte (evitando a necessidade de manter uma lista estática atualizada).
 
 ### Passo 2: Descoberta de Cofres (Vault Auto-Discovery)
 * Em sistemas **macOS**, o Obsidian salva os metadados dos cofres abertos recentemente no arquivo `~/Library/Application Support/obsidian/obsidian.json`.
@@ -41,20 +43,6 @@ Para cada ID selecionada, o script analisa o destino: `[TARGET_VAULT]/.obsidian/
 * **Se o diretório já existir**: A ferramenta faz um `cd` para a pasta e roda um `git pull` seguro, garantindo que o plugin receba as atualizações mais recentes do código-fonte.
 * **Se o diretório não existir**: A ferramenta usa `git clone [repo_url]` clonando o repositório na pasta.
 
-## 4. O Manifesto `plugins.json`
-
-```json
-[
-  {
-    "name": "SmartWrite Companion",
-    "description": "Intelligent writing assistant com análise e persona feedback.",
-    "repo_url": "https://github.com/zandercpzed/smartwrite-companion",
-    "id": "smartwrite-companion"
-  }
-]
-```
-* **`id`**: Atributo vital. Ele obriga o diretório clonado a ter este exato nome, pois o Obsidian só ativa plugins cujo nome da pasta seja idêntico à chave `id` interna do `manifest.json`.
-
-## 5. Limitações Conhecidas
+## 4. Limitações Conhecidas
 1. **Compilação Ausente:** Atualmente, a instalação é um mero download dos fontes do repositório. O script presume que a branch `main` clonada possui uma pasta `dist/` ou o arquivo pré-compilado `main.js`. Se o código remoto não estiver "buildado", a ativação do plugin no Obsidian irá falhar.
 2. **Pathing de Auto-Discovery:** O pathing `$HOME/Library/Application Support/obsidian/obsidian.json` está chumbado no script e é focado especificamente na arquitetura do Apple macOS.
