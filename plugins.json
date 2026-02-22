@@ -1,19 +1,19 @@
 [
   {
     "name": "SmartWrite Companion",
-    "description": "AI-powered writing companion",
+    "description": "Intelligent writing assistant with real-time statistics, readability analysis, and local AI-powered persona feedback.",
     "repo_url": "https://github.com/zandercpzed/smartwrite-companion",
     "id": "smartwrite-companion"
   },
   {
-    "name": "SmartWrite Analyzer",
-    "description": "Analyzes text for style and tone",
+    "name": "SmartWriter Analyzer",
+    "description": "AI-powered literary analysis co-pilot. Analyzes readability, cadence, coherence, and literary quality of large manuscripts.",
     "repo_url": "https://github.com/zandercpzed/smartwrite-analyzer",
-    "id": "smartwrite-analyzer"
+    "id": "smartwriter-analyzer"
   },
   {
     "name": "SmartWrite Publisher",
-    "description": "Publishes articles to Wordpress",
+    "description": "Professional publishing automation for Substack. Features batch publishing, parallel processing, and enhanced UX.",
     "repo_url": "https://github.com/zandercpzed/smartwrite-publisher",
     "id": "smartwrite-publisher"
   }
