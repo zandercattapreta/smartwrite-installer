@@ -2,8 +2,6 @@
 
 # Configuration
 REPO_OWNER="zandercpzed"
-REPO_NAME="smartwrite-installer"
-INDEX_URL="https://raw.githubusercontent.com/$REPO_OWNER/$REPO_NAME/main/plugins.json"
 OBSIDIAN_CONFIG="$HOME/Library/Application Support/obsidian/obsidian.json"
 
 # Colors
@@ -19,19 +17,41 @@ if ! command -v jq &> /dev/null; then
     echo -e "${RED}Error: jq is not installed.${NC}"
     exit 1
 fi
-
-# 1. Fetch Plugin Index
-echo -e "\n${BLUE}[1/4] Fetching plugin index...${NC}"
-# For local testing, use local file if available, otherwise fetch remote
-if [ -f "plugins.json" ]; then
-    echo "Using local plugins.json"
-    PLUGINS_JSON=$(cat plugins.json)
-else
-    PLUGINS_JSON=$(curl -s $INDEX_URL)
+if ! command -v curl &> /dev/null; then
+    echo -e "${RED}Error: curl is not installed.${NC}"
+    exit 1
 fi
 
-if [ -z "$PLUGINS_JSON" ]; then
-    echo -e "${RED}Failed to load plugin index.${NC}"
+# 1. Discover Plugins Dynamically from GitHub
+echo -e "\n${BLUE}[1/4] Discovering SmartWrite plugins from GitHub...${NC}"
+
+# Get list of repo names matching the pattern
+REPOS=$(curl -s "https://api.github.com/users/$REPO_OWNER/repos?per_page=100" | jq -r '.[].name | select(test("^smartwrite(r)?-.*")) | select(. != "smartwrite-installer")')
+
+if [ -z "$REPOS" ]; then
+    echo -e "${RED}Failed to discover plugins from GitHub. Check your connection or API limits.${NC}"
+    exit 1
+fi
+
+# Build JSON array dynamically
+PLUGINS_JSON="[]"
+
+for repo in $REPOS; do
+    echo "  -> Found repository: $repo"
+    # Fetch manifest.json to get accurate plugin metadata
+    MANIFEST=$(curl -s "https://raw.githubusercontent.com/$REPO_OWNER/$repo/main/manifest.json")
+    if echo "$MANIFEST" | jq -e . >/dev/null 2>&1; then
+        REPO_URL="https://github.com/$REPO_OWNER/$repo.git"
+        # Create a valid JSON object matching our expected format
+        PLUGIN_OBJ=$(echo "$MANIFEST" | jq --arg url "$REPO_URL" '{id: .id, name: .name, description: .description, repo_url: $url}')
+        PLUGINS_JSON=$(echo "$PLUGINS_JSON" | jq --argjson plugin "$PLUGIN_OBJ" '. + [$plugin]')
+    else
+        echo "     (Skipping: No valid manifest.json found in the main branch)"
+    fi
+done
+
+if [ "$PLUGINS_JSON" == "[]" ]; then
+    echo -e "${RED}No valid SmartWrite plugins found.${NC}"
     exit 1
 fi
 
@@ -90,7 +110,7 @@ for idx in "${PLUGIN_SELECTIONS[@]}"; do
     # Get plugin details using jq
     PLUGIN_DATA=$(echo "$PLUGINS_JSON" | jq -r ".[$idx]")
     
-    if [ "$PLUGIN_DATA" == "null" ]; then
+    if [ "$PLUGIN_DATA" == "null" ] || [ -z "$PLUGIN_DATA" ]; then
         echo -e "${RED}Skipping invalid selection: $idx${NC}"
         continue
     fi
