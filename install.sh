@@ -84,15 +84,26 @@ for i in "${!VAULTS[@]}"; do
     echo "[$i] ${VAULTS[$i]}"
 done
 
-read -p "Select Vault to install into (0-$((${#VAULTS[@]}-1))): " VAULT_IDX
-TARGET_VAULT="${VAULTS[$VAULT_IDX]}"
+echo ""
+echo "Enter vault numbers to install into (space separated, e.g., '0 2'):"
+read -r -a VAULT_SELECTIONS
 
-if [ -z "$TARGET_VAULT" ]; then
-    echo -e "${RED}Invalid selection.${NC}"
+# Validate vault selections
+SELECTED_VAULTS=()
+for vidx in "${VAULT_SELECTIONS[@]}"; do
+    if ! [[ "$vidx" =~ ^[0-9]+$ ]] || [ "$vidx" -ge "${#VAULTS[@]}" ]; then
+        echo -e "${RED}Skipping invalid vault: $vidx${NC}"
+        continue
+    fi
+    SELECTED_VAULTS+=("${VAULTS[$vidx]}")
+done
+
+if [ ${#SELECTED_VAULTS[@]} -eq 0 ]; then
+    echo -e "${RED}No valid vaults selected.${NC}"
     exit 1
 fi
 
-echo -e "Selected Vault: ${GREEN}$TARGET_VAULT${NC}"
+echo -e "Selected ${GREEN}${#SELECTED_VAULTS[@]}${NC} vault(s)."
 
 # --- Helper: Install from custom GitHub URL ---
 install_from_url() {
@@ -157,41 +168,47 @@ read -r -a PLUGIN_SELECTIONS
 
 # 4. Install Plugins
 echo -e "\n${BLUE}[4/4] Installing...${NC}"
-PLUGIN_DIR="$TARGET_VAULT/.obsidian/plugins"
-mkdir -p "$PLUGIN_DIR"
 
-for idx in "${PLUGIN_SELECTIONS[@]}"; do
-    # Handle custom URL option
-    if [ "$idx" == "c" ] || [ "$idx" == "C" ]; then
-        install_from_url "$PLUGIN_DIR"
-        continue
-    fi
+for TARGET_VAULT in "${SELECTED_VAULTS[@]}"; do
+    VAULT_NAME=$(basename "$TARGET_VAULT")
+    echo -e "\n${BLUE}--- Vault: ${GREEN}$VAULT_NAME${NC} ${BLUE}---${NC}"
     
-    # Get plugin details using jq
-    PLUGIN_DATA=$(echo "$PLUGINS_JSON" | jq -r ".[$idx]")
+    PLUGIN_DIR="$TARGET_VAULT/.obsidian/plugins"
+    mkdir -p "$PLUGIN_DIR"
     
-    if [ "$PLUGIN_DATA" == "null" ] || [ -z "$PLUGIN_DATA" ]; then
-        echo -e "${RED}Skipping invalid selection: $idx${NC}"
-        continue
-    fi
-    
-    ID=$(echo "$PLUGIN_DATA" | jq -r '.id')
-    NAME=$(echo "$PLUGIN_DATA" | jq -r '.name')
-    URL=$(echo "$PLUGIN_DATA" | jq -r '.repo_url')
-    
-    TARGET_DIR="$PLUGIN_DIR/$ID"
-    
-    echo -e "Installing ${GREEN}$NAME${NC}..."
-    
-    if [ -d "$TARGET_DIR" ]; then
-        echo "  Updating existing installation..."
-        cd "$TARGET_DIR" && git pull && cd - > /dev/null
-    else
-        echo "  Cloning repository..."
-        git clone "$URL" "$TARGET_DIR"
-    fi
-    
-    echo "  Done."
+    for idx in "${PLUGIN_SELECTIONS[@]}"; do
+        # Handle custom URL option
+        if [ "$idx" == "c" ] || [ "$idx" == "C" ]; then
+            install_from_url "$PLUGIN_DIR"
+            continue
+        fi
+        
+        # Get plugin details using jq
+        PLUGIN_DATA=$(echo "$PLUGINS_JSON" | jq -r ".[$idx]")
+        
+        if [ "$PLUGIN_DATA" == "null" ] || [ -z "$PLUGIN_DATA" ]; then
+            echo -e "${RED}Skipping invalid selection: $idx${NC}"
+            continue
+        fi
+        
+        ID=$(echo "$PLUGIN_DATA" | jq -r '.id')
+        NAME=$(echo "$PLUGIN_DATA" | jq -r '.name')
+        URL=$(echo "$PLUGIN_DATA" | jq -r '.repo_url')
+        
+        TARGET_DIR="$PLUGIN_DIR/$ID"
+        
+        echo -e "  Installing ${GREEN}$NAME${NC}..."
+        
+        if [ -d "$TARGET_DIR" ]; then
+            echo "    Updating existing installation..."
+            cd "$TARGET_DIR" && git pull && cd - > /dev/null
+        else
+            echo "    Cloning repository..."
+            git clone "$URL" "$TARGET_DIR"
+        fi
+        
+        echo "    Done."
+    done
 done
 
 echo -e "\n${GREEN}Installation Complete!${NC}"
