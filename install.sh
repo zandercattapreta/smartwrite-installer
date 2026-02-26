@@ -208,6 +208,61 @@ if [ "$CONFIRM" != "y" ] && [ "$CONFIRM" != "Y" ]; then
     exit 0
 fi
 
+# --- Helper: Post-clone build check ---
+BUILD_CONFIRMED=""
+check_and_build() {
+    local DIR="$1"
+    local NAME="$2"
+    
+    # If main.js already exists, plugin is ready
+    if [ -f "$DIR/main.js" ]; then
+        return 0
+    fi
+    
+    # Check if package.json exists (needs build)
+    if [ ! -f "$DIR/package.json" ]; then
+        return 0
+    fi
+    
+    echo -e "    ${BLUE}⚠ Plugin '$NAME' needs to be compiled (no main.js found).${NC}"
+    
+    # Check if npm is available
+    if ! command -v npm &> /dev/null; then
+        echo -e "    ${RED}✗ npm is not installed. Cannot build this plugin.${NC}"
+        echo -e "    ${RED}  Install Node.js (https://nodejs.org) and try again.${NC}"
+        return 1
+    fi
+    
+    # Ask user for confirmation (only once per session)
+    if [ -z "$BUILD_CONFIRMED" ]; then
+        echo -e "    This plugin requires: ${GREEN}npm install${NC} + ${GREEN}npm run build${NC}"
+        read -p "    > Build this plugin? (y/n/a=all): " BUILD_ANSWER
+        
+        if [ "$BUILD_ANSWER" == "a" ] || [ "$BUILD_ANSWER" == "A" ]; then
+            BUILD_CONFIRMED="yes"
+        elif [ "$BUILD_ANSWER" != "y" ] && [ "$BUILD_ANSWER" != "Y" ]; then
+            echo -e "    ${RED}Skipping build. Plugin may not work without main.js.${NC}"
+            return 1
+        fi
+    fi
+    
+    echo -e "    Running ${GREEN}npm install${NC}..."
+    cd "$DIR" && npm install --silent 2>&1 | tail -1
+    
+    if [ -f "$DIR/package.json" ] && grep -q '"build"' "$DIR/package.json"; then
+        echo -e "    Running ${GREEN}npm run build${NC}..."
+        npm run build --silent 2>&1 | tail -1
+    fi
+    
+    cd - > /dev/null
+    
+    if [ -f "$DIR/main.js" ]; then
+        echo -e "    ${GREEN}✓ Build successful!${NC}"
+    else
+        echo -e "    ${RED}✗ Build finished but main.js not found. Plugin may not work.${NC}"
+    fi
+}
+
 # 4. Install Plugins
 echo -e "\n${BLUE}[4/4] Installing...${NC}"
 
@@ -236,6 +291,9 @@ for TARGET_VAULT in "${SELECTED_VAULTS[@]}"; do
             echo "    Cloning repository..."
             git clone "$URL" "$TARGET_DIR"
         fi
+        
+        # Post-clone: check if build is needed
+        check_and_build "$TARGET_DIR" "$NAME"
         
         echo "    Done."
     done
