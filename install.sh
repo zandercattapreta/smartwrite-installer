@@ -94,11 +94,65 @@ fi
 
 echo -e "Selected Vault: ${GREEN}$TARGET_VAULT${NC}"
 
+# --- Helper: Install from custom GitHub URL ---
+install_from_url() {
+    local PLUGIN_DIR="$1"
+    
+    read -p "Enter GitHub repository URL: " CUSTOM_URL
+    
+    # Validate URL format
+    if [[ ! "$CUSTOM_URL" =~ ^https://github\.com/.+/.+ ]]; then
+        echo -e "${RED}Invalid GitHub URL. Expected format: https://github.com/user/repo${NC}"
+        return 1
+    fi
+    
+    # Clean URL (remove trailing .git or /)
+    CUSTOM_URL="${CUSTOM_URL%.git}"
+    CUSTOM_URL="${CUSTOM_URL%/}"
+    
+    # Extract owner/repo from URL
+    REPO_PATH="${CUSTOM_URL#https://github.com/}"
+    OWNER=$(echo "$REPO_PATH" | cut -d'/' -f1)
+    REPO=$(echo "$REPO_PATH" | cut -d'/' -f2)
+    
+    echo -e "  Checking ${GREEN}$OWNER/$REPO${NC}..."
+    
+    # Try to fetch manifest.json for plugin metadata
+    MANIFEST=$(curl -s "https://raw.githubusercontent.com/$OWNER/$REPO/main/manifest.json")
+    
+    if echo "$MANIFEST" | jq -e '.id' > /dev/null 2>&1; then
+        ID=$(echo "$MANIFEST" | jq -r '.id')
+        NAME=$(echo "$MANIFEST" | jq -r '.name // "'$REPO'"')
+        DESC=$(echo "$MANIFEST" | jq -r '.description // "No description"')
+        echo -e "  Found Obsidian plugin: ${GREEN}$NAME${NC} ($DESC)"
+    else
+        echo -e "  No manifest.json found. Using repo name as plugin ID."
+        ID="$REPO"
+        NAME="$REPO"
+    fi
+    
+    TARGET_DIR="$PLUGIN_DIR/$ID"
+    
+    echo -e "  Installing ${GREEN}$NAME${NC}..."
+    
+    if [ -d "$TARGET_DIR" ]; then
+        echo "  Updating existing installation..."
+        cd "$TARGET_DIR" && git pull && cd - > /dev/null
+    else
+        echo "  Cloning repository..."
+        git clone "${CUSTOM_URL}.git" "$TARGET_DIR"
+    fi
+    
+    echo "  Done."
+}
+
 # 3. Select Plugins
 echo -e "\n${BLUE}[3/4] Available Plugins:${NC}"
 echo "$PLUGINS_JSON" | jq -r '.[] | "\(.id): \(.name) - \(.description)"' | nl -v 0 -w 2 -s ". "
+echo -e " ${BLUE}c. Enter GitHub repository URL${NC}"
 
-echo "Enter the numbers of plugins to install (space separated, e.g., '0 2'):"
+echo ""
+echo "Enter the numbers of plugins to install (space separated, e.g., '0 2 c'):"
 read -r -a PLUGIN_SELECTIONS
 
 # 4. Install Plugins
@@ -107,6 +161,12 @@ PLUGIN_DIR="$TARGET_VAULT/.obsidian/plugins"
 mkdir -p "$PLUGIN_DIR"
 
 for idx in "${PLUGIN_SELECTIONS[@]}"; do
+    # Handle custom URL option
+    if [ "$idx" == "c" ] || [ "$idx" == "C" ]; then
+        install_from_url "$PLUGIN_DIR"
+        continue
+    fi
+    
     # Get plugin details using jq
     PLUGIN_DATA=$(echo "$PLUGINS_JSON" | jq -r ".[$idx]")
     
@@ -125,7 +185,7 @@ for idx in "${PLUGIN_SELECTIONS[@]}"; do
     
     if [ -d "$TARGET_DIR" ]; then
         echo "  Updating existing installation..."
-        cd "$TARGET_DIR" && git pull
+        cd "$TARGET_DIR" && git pull && cd - > /dev/null
     else
         echo "  Cloning repository..."
         git clone "$URL" "$TARGET_DIR"
