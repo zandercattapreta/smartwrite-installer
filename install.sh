@@ -105,56 +105,57 @@ fi
 
 echo -e "Selected ${GREEN}${#SELECTED_VAULTS[@]}${NC} vault(s)."
 
-# --- Helper: Install from custom GitHub URL ---
-install_from_url() {
-    local PLUGIN_DIR="$1"
-    
-    read -p "Enter GitHub repository URL: " CUSTOM_URL
-    
-    # Validate URL format
-    if [[ ! "$CUSTOM_URL" =~ ^https://github\.com/.+/.+ ]]; then
-        echo -e "${RED}Invalid GitHub URL. Expected format: https://github.com/user/repo${NC}"
-        return 1
-    fi
-    
-    # Clean URL (remove trailing .git or /)
-    CUSTOM_URL="${CUSTOM_URL%.git}"
-    CUSTOM_URL="${CUSTOM_URL%/}"
-    
-    # Extract owner/repo from URL
-    REPO_PATH="${CUSTOM_URL#https://github.com/}"
-    OWNER=$(echo "$REPO_PATH" | cut -d'/' -f1)
-    REPO=$(echo "$REPO_PATH" | cut -d'/' -f2)
-    
-    echo -e "  Checking ${GREEN}$OWNER/$REPO${NC}..."
-    
-    # Try to fetch manifest.json for plugin metadata
-    MANIFEST=$(curl -s "https://raw.githubusercontent.com/$OWNER/$REPO/main/manifest.json")
-    
-    if echo "$MANIFEST" | jq -e '.id' > /dev/null 2>&1; then
-        ID=$(echo "$MANIFEST" | jq -r '.id')
-        NAME=$(echo "$MANIFEST" | jq -r '.name // "'$REPO'"')
-        DESC=$(echo "$MANIFEST" | jq -r '.description // "No description"')
-        echo -e "  Found Obsidian plugin: ${GREEN}$NAME${NC} ($DESC)"
-    else
-        echo -e "  No manifest.json found. Using repo name as plugin ID."
-        ID="$REPO"
-        NAME="$REPO"
-    fi
-    
-    TARGET_DIR="$PLUGIN_DIR/$ID"
-    
-    echo -e "  Installing ${GREEN}$NAME${NC}..."
-    
-    if [ -d "$TARGET_DIR" ]; then
-        echo "  Updating existing installation..."
-        cd "$TARGET_DIR" && git pull && cd - > /dev/null
-    else
-        echo "  Cloning repository..."
-        git clone "${CUSTOM_URL}.git" "$TARGET_DIR"
-    fi
-    
-    echo "  Done."
+# --- Helper: Collect custom GitHub URL (pre-install) ---
+CUSTOM_PLUGINS_JSON="[]"
+
+collect_custom_url() {
+    while true; do
+        echo ""
+        read -p "> Enter GitHub repository URL (or 'done' to finish): " CUSTOM_URL
+        
+        if [ "$CUSTOM_URL" == "done" ] || [ "$CUSTOM_URL" == "d" ]; then
+            break
+        fi
+        
+        # Validate URL format
+        if [[ ! "$CUSTOM_URL" =~ ^https://github\.com/.+/.+ ]]; then
+            echo -e "${RED}  Invalid URL. Expected: https://github.com/user/repo${NC}"
+            continue
+        fi
+        
+        # Clean URL (remove trailing .git or /)
+        CUSTOM_URL="${CUSTOM_URL%.git}"
+        CUSTOM_URL="${CUSTOM_URL%/}"
+        
+        # Extract owner/repo
+        REPO_PATH="${CUSTOM_URL#https://github.com/}"
+        OWNER=$(echo "$REPO_PATH" | cut -d'/' -f1)
+        REPO=$(echo "$REPO_PATH" | cut -d'/' -f2)
+        
+        echo -e "  Checking ${GREEN}$OWNER/$REPO${NC}..."
+        
+        # Try to fetch manifest.json
+        MANIFEST=$(curl -s "https://raw.githubusercontent.com/$OWNER/$REPO/main/manifest.json")
+        
+        if echo "$MANIFEST" | jq -e '.id' > /dev/null 2>&1; then
+            ID=$(echo "$MANIFEST" | jq -r '.id')
+            NAME=$(echo "$MANIFEST" | jq -r '.name // "'$REPO'"')
+            DESC=$(echo "$MANIFEST" | jq -r '.description // "No description"')
+            echo -e "  ${GREEN}✓${NC} Found plugin: ${GREEN}$NAME${NC} — $DESC"
+        else
+            echo -e "  No manifest.json found. Using repo name as ID."
+            ID="$REPO"
+            NAME="$REPO"
+            DESC="Custom plugin"
+        fi
+        
+        # Add to custom plugins list
+        PLUGIN_OBJ=$(jq -n --arg id "$ID" --arg name "$NAME" --arg desc "$DESC" --arg url "${CUSTOM_URL}.git" \
+            '{id: $id, name: $name, description: $desc, repo_url: $url}')
+        CUSTOM_PLUGINS_JSON=$(echo "$CUSTOM_PLUGINS_JSON" | jq --argjson plugin "$PLUGIN_OBJ" '. + [$plugin]')
+        
+        echo -e "  Added to install list. Enter another URL or type ${GREEN}done${NC}."
+    done
 }
 
 # 3. Select Plugins
@@ -166,6 +167,47 @@ echo ""
 echo "Enter the numbers of plugins to install (space separated, e.g., '0 2 c'):"
 read -r -a PLUGIN_SELECTIONS
 
+# If 'c' was selected, collect URLs now (before installing)
+SELECTED_INDEX_PLUGINS="[]"
+for idx in "${PLUGIN_SELECTIONS[@]}"; do
+    if [ "$idx" == "c" ] || [ "$idx" == "C" ]; then
+        collect_custom_url
+    else
+        # Validate and collect index plugin
+        PLUGIN_DATA=$(echo "$PLUGINS_JSON" | jq -r ".[$idx]")
+        if [ "$PLUGIN_DATA" != "null" ] && [ -n "$PLUGIN_DATA" ]; then
+            SELECTED_INDEX_PLUGINS=$(echo "$SELECTED_INDEX_PLUGINS" | jq --argjson p "$PLUGIN_DATA" '. + [$p]')
+        else
+            echo -e "${RED}Skipping invalid selection: $idx${NC}"
+        fi
+    fi
+done
+
+# Merge all plugins to install
+ALL_PLUGINS=$(echo "$SELECTED_INDEX_PLUGINS" "$CUSTOM_PLUGINS_JSON" | jq -s '.[0] + .[1]')
+TOTAL=$(echo "$ALL_PLUGINS" | jq 'length')
+
+if [ "$TOTAL" -eq 0 ]; then
+    echo -e "${RED}No plugins selected.${NC}"
+    exit 1
+fi
+
+# Confirmation summary
+echo -e "\n${BLUE}=== Installation Summary ===${NC}"
+echo -e "Vaults (${#SELECTED_VAULTS[@]}):"
+for v in "${SELECTED_VAULTS[@]}"; do
+    echo -e "  • $(basename "$v")"
+done
+echo -e "Plugins ($TOTAL):"
+echo "$ALL_PLUGINS" | jq -r '.[] | "  • \(.name)"'
+
+echo ""
+read -p "> Proceed with installation? (y/n): " CONFIRM
+if [ "$CONFIRM" != "y" ] && [ "$CONFIRM" != "Y" ]; then
+    echo "Installation cancelled."
+    exit 0
+fi
+
 # 4. Install Plugins
 echo -e "\n${BLUE}[4/4] Installing...${NC}"
 
@@ -176,24 +218,12 @@ for TARGET_VAULT in "${SELECTED_VAULTS[@]}"; do
     PLUGIN_DIR="$TARGET_VAULT/.obsidian/plugins"
     mkdir -p "$PLUGIN_DIR"
     
-    for idx in "${PLUGIN_SELECTIONS[@]}"; do
-        # Handle custom URL option
-        if [ "$idx" == "c" ] || [ "$idx" == "C" ]; then
-            install_from_url "$PLUGIN_DIR"
-            continue
-        fi
+    for row in $(echo "$ALL_PLUGINS" | jq -r '.[] | @base64'); do
+        _jq() { echo "$row" | base64 --decode | jq -r "$1"; }
         
-        # Get plugin details using jq
-        PLUGIN_DATA=$(echo "$PLUGINS_JSON" | jq -r ".[$idx]")
-        
-        if [ "$PLUGIN_DATA" == "null" ] || [ -z "$PLUGIN_DATA" ]; then
-            echo -e "${RED}Skipping invalid selection: $idx${NC}"
-            continue
-        fi
-        
-        ID=$(echo "$PLUGIN_DATA" | jq -r '.id')
-        NAME=$(echo "$PLUGIN_DATA" | jq -r '.name')
-        URL=$(echo "$PLUGIN_DATA" | jq -r '.repo_url')
+        ID=$(_jq '.id')
+        NAME=$(_jq '.name')
+        URL=$(_jq '.repo_url')
         
         TARGET_DIR="$PLUGIN_DIR/$ID"
         
@@ -213,3 +243,4 @@ done
 
 echo -e "\n${GREEN}Installation Complete!${NC}"
 echo "Please restart Obsidian or reload plugins to see changes."
+
