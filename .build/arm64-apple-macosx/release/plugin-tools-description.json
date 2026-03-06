@@ -1,0 +1,566 @@
+{
+  "builtTestProducts" : [
+
+  ],
+  "copyCommands" : {
+    "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller_SmartWriteInstaller.bundle/Assets.xcassets" : {
+      "inputs" : [
+        {
+          "kind" : "directory",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Assets.xcassets"
+        }
+      ],
+      "outputs" : [
+        {
+          "kind" : "directory",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller_SmartWriteInstaller.bundle/Assets.xcassets"
+        }
+      ]
+    }
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.SmartWriteInstaller-arm64-apple-macosx26.0-release.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/sources",
+      "importPath" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/ContentView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/InstallerViewModel.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Models.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/SmartWriteInstallerApp.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/VaultCopierViewModel.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/AboutView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/ConfirmView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/CopierOptionsView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/CopierProgressView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/CopierSourceView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/CopierTargetView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/InstallingView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/SelectPluginsView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/SelectVaultsView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/StepperBarView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/VaultCopierTabView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/DerivedSources/resource_bundle_accessor.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "virtual",
+          "name" : "<SmartWriteInstaller-arm64-apple-macosx26.0-release.module-resources>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/sources"
+        }
+      ],
+      "isLibrary" : false,
+      "moduleName" : "SmartWriteInstaller",
+      "moduleOutputPath" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/Modules/SmartWriteInstaller.swiftmodule",
+      "objects" : [
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/ContentView.swift.o",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/InstallerViewModel.swift.o",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/Models.swift.o",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/SmartWriteInstallerApp.swift.o",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/VaultCopierViewModel.swift.o",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/AboutView.swift.o",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/ConfirmView.swift.o",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/CopierOptionsView.swift.o",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/CopierProgressView.swift.o",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/CopierSourceView.swift.o",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/CopierTargetView.swift.o",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/InstallingView.swift.o",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/SelectPluginsView.swift.o",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/SelectVaultsView.swift.o",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/StepperBarView.swift.o",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/VaultCopierTabView.swift.o",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/resource_bundle_accessor.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-whole-module-optimization",
+        "-num-threads",
+        "8",
+        "-serialize-diagnostics",
+        "-O",
+        "-j8",
+        "-DSWIFT_PACKAGE",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_AVAILABLE",
+        "-module-cache-path",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/ModuleCache",
+        "-parseable-output",
+        "-Xfrontend",
+        "-entry-point-function-name",
+        "-Xfrontend",
+        "SmartWriteInstaller_main",
+        "-color-diagnostics",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "__smartwrite_installer"
+      ],
+      "outputFileMapPath" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/ContentView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/InstallerViewModel.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/Models.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/SmartWriteInstallerApp.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/VaultCopierViewModel.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/AboutView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/ConfirmView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/CopierOptionsView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/CopierProgressView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/CopierSourceView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/CopierTargetView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/InstallingView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/SelectPluginsView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/SelectVaultsView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/StepperBarView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/VaultCopierTabView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/resource_bundle_accessor.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/Modules/SmartWriteInstaller.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/ContentView.swift",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/InstallerViewModel.swift",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Models.swift",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/SmartWriteInstallerApp.swift",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/VaultCopierViewModel.swift",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/AboutView.swift",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/ConfirmView.swift",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/CopierOptionsView.swift",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/CopierProgressView.swift",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/CopierSourceView.swift",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/CopierTargetView.swift",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/InstallingView.swift",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/SelectPluginsView.swift",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/SelectVaultsView.swift",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/StepperBarView.swift",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/VaultCopierTabView.swift",
+        "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/DerivedSources/resource_bundle_accessor.swift"
+      ],
+      "tempsPath" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build",
+      "wholeModuleOptimization" : true
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "SmartWriteInstaller" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "SmartWriteInstaller",
+      "-package-name",
+      "__smartwrite_installer",
+      "-c",
+      "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/ContentView.swift",
+      "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/InstallerViewModel.swift",
+      "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Models.swift",
+      "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/SmartWriteInstallerApp.swift",
+      "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/VaultCopierViewModel.swift",
+      "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/AboutView.swift",
+      "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/ConfirmView.swift",
+      "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/CopierOptionsView.swift",
+      "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/CopierProgressView.swift",
+      "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/CopierSourceView.swift",
+      "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/CopierTargetView.swift",
+      "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/InstallingView.swift",
+      "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/SelectPluginsView.swift",
+      "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/SelectVaultsView.swift",
+      "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/StepperBarView.swift",
+      "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/VaultCopierTabView.swift",
+      "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/DerivedSources/resource_bundle_accessor.swift",
+      "-I",
+      "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-whole-module-optimization",
+      "-num-threads",
+      "8",
+      "-serialize-diagnostics",
+      "-O",
+      "-j8",
+      "-DSWIFT_PACKAGE",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_AVAILABLE",
+      "-module-cache-path",
+      "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/ModuleCache",
+      "-parseable-output",
+      "-Xfrontend",
+      "-entry-point-function-name",
+      "-Xfrontend",
+      "SmartWriteInstaller_main",
+      "-color-diagnostics",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "__smartwrite_installer",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "SmartWriteInstaller" : [
+
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/ContentView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/InstallerViewModel.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Models.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/SmartWriteInstallerApp.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/VaultCopierViewModel.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/AboutView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/ConfirmView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/CopierOptionsView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/CopierProgressView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/CopierSourceView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/CopierTargetView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/InstallingView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/SelectPluginsView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/SelectVaultsView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/StepperBarView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/Sources/SmartWriteInstaller/Views/VaultCopierTabView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/DerivedSources/resource_bundle_accessor.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/sources"
+    },
+    "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/AboutView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/ConfirmView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/ContentView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/CopierOptionsView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/CopierProgressView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/CopierSourceView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/CopierTargetView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/InstallerViewModel.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/InstallingView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/Models.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/SelectPluginsView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/SelectVaultsView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/SmartWriteInstallerApp.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/StepperBarView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/VaultCopierTabView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/VaultCopierViewModel.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.build/resource_bundle_accessor.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/SmartWriteInstaller.product/Objects.LinkFileList"
+    },
+    "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/zander/Documents/_ coding/_ smartwrite-installer/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}
