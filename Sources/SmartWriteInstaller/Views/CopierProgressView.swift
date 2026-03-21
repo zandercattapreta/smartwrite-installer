@@ -29,7 +29,7 @@ struct CopierProgressView: View {
                     ProgressView(value: Double(current), total: Double(total))
                         .tint(.accentColor)
 
-                case .completed(let success, let failed):
+                case .completed(_, let failed):
                     HStack {
                         Image(systemName: failed == 0 ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
                             .foregroundStyle(failed == 0 ? .green : .orange)
@@ -81,7 +81,7 @@ struct CopierProgressView: View {
                         RoundedRectangle(cornerRadius: 6)
                             .stroke(Color(nsColor: .separatorColor), lineWidth: 1)
                     )
-                    .onChange(of: vm.copyLog.count) { _ in
+                    .onChange(of: vm.copyLog.count) {
                         if !vm.copyLog.isEmpty {
                             withAnimation {
                                 proxy.scrollTo(vm.copyLog.count - 1, anchor: .bottom)

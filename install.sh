@@ -2,7 +2,14 @@
 
 # Configuration
 REPO_OWNER="zandercpzed"
-OBSIDIAN_CONFIG="$HOME/Library/Application Support/obsidian/obsidian.json"
+
+# Detect OS and set Obsidian Config Path
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    OBSIDIAN_CONFIG="$HOME/Library/Application Support/obsidian/obsidian.json"
+else
+    # Default for Linux
+    OBSIDIAN_CONFIG="$HOME/.config/obsidian/obsidian.json"
+fi
 
 # Colors
 GREEN='\033[0;32m'

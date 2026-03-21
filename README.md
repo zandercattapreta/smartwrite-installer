@@ -1,39 +1,48 @@
 # SmartWrite Installer
 
-O **SmartWrite Installer** é um utilitário CLI interativo projetado para descobrir automaticamente cofres (vaults) do Obsidian e instalar de forma centralizada os plugins do ecossistema SmartWrite desenvolvidos pela Z•Edições.
+O **SmartWrite Installer** é o gerenciador oficial para a suíte de plugins SmartWrite para Obsidian, desenvolvido pela **Z•Edições**. Ele detecta automaticamente seus cofres (vaults) e permite instalar ou atualizar os plugins do ecossistema de forma centralizada.
 
-> Parte do projeto "Programando sem saber código (uma aventura antigravitacional)" e do ecossistema SADE.
+---
 
-## 🚀 Funcionalidades Principais
+## 🚀 Instalação por Plataforma
 
-- **Auto-Discovery:** Escaneia automaticamente as configurações locais do Obsidian (`obsidian.json`) e localiza todos os cofres do usuário no macOS.
-- **Catálogo 100% Dinâmico:** Faz uma varredura real em tempo real diretamente na API do GitHub procurando por todos os seus repositórios públicos que contenham "smartwrite" no nome, extraindo seus nomes e descrições originais de seus respectivos manifestos.
-- **Instalação e Atualização Interativas:** Interface colorida no terminal que permite selecionar quais plugins instalar/atualizar via `git clone` e `git pull`.
+### 🍎 macOS (Recomendado)
+1. Baixe o arquivo **`SmartWriteInstaller.dmg`**.
+2. Arraste o aplicativo para a pasta **Applications**.
+3. Abra o aplicativo (pode ser necessário autorizar em *Ajustes do Sistema > Privacidade e Segurança*).
 
-## 📦 Lista de Plugins Suportados
+### 🪟 Windows (PowerShell)
+1. Certifique-se de ter o [Git](https://git-scm.com/download/win) instalado.
+2. Baixe o arquivo **`install.ps1`**.
+3. Clique com o botão direito no arquivo e selecione **"Executar com o PowerShell"**.
+4. Siga as instruções no terminal.
 
-1. **SmartWrite Companion:** Assistente de escrita local inteligente, com estatísticas e personas.
-2. **SmartWriter Analyzer:** Analisador de qualidade de manuscritos (Ritmo, Legibilidade, Coerência).
-3. **SmartWrite Publisher:** Utilitário para automação de publicações no Substack em lote.
+### 🐧 Linux (Debian/Ubuntu/Outros)
+1. Certifique-se de ter `git`, `curl` e `jq` instalados (`sudo apt install git curl jq`).
+2. Baixe o arquivo **`install.sh`**.
+3. No terminal, execute:
+   ```bash
+   chmod +x install.sh
+   ./install.sh
+   ```
 
-## 💻 Como Usar
+---
 
-Certifique-se de que você possui `git`, `curl` e `jq` instalados em sua máquina.
+## 🛠️ Dependências Necessárias
 
-```bash
-# 1. Clone o instalador
-git clone https://github.com/zandercpzed/smartwrite-installer.git
-cd smartwrite-installer
+| Plataforma | Requisito Principal | Ferramentas Extras |
+| :--- | :--- | :--- |
+| **macOS** | macOS 14.0+ | Git (embutido ou via Homebrew) |
+| **Windows** | PowerShell 5.1+ | **Git** (obrigatório), **jq** (opcional para melhor detecção) |
+| **Linux** | Bash | **Git**, **curl**, **jq** (obrigatórios) |
 
-# 2. Dê permissão de execução
-chmod +x install.sh
+---
 
-# 3. Execute o assistente
-./install.sh
-```
-
-## 📚 Documentação
-Consulte a [Documentação Técnica e Funcional](DOCUMENTATION.md) para detalhes da arquitetura.
+## 📦 Plugins Incluídos no Ecossistema
+- **SmartWrite Companion:** Assistente de escrita inteligente.
+- **SmartWriter Analyzer:** Analisador de qualidade de manuscritos.
+- **SmartWrite Publisher:** Automação para Substack.
 
 ## 📄 Licença
 Licenciado sob a [MIT License](LICENSE.md).
+© 2026 Z•Edições.
