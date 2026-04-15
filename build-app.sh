@@ -20,6 +20,11 @@ mkdir -p "${BUNDLE}/Contents/Resources"
 cp ".build/release/${EXEC_NAME}" "${BUNDLE}/Contents/MacOS/"
 cp "Sources/SmartWriteInstaller/Info.plist" "${BUNDLE}/Contents/"
 
+echo "📄 Copiando documentação..."
+cp "README.md" "${BUNDLE}/Contents/Resources/"
+cp "FAQ.md" "${BUNDLE}/Contents/Resources/"
+cp "DOCUMENTATION.md" "${BUNDLE}/Contents/Resources/"
+
 # Copiar resources do SPM (assets bundle)
 ASSETS_BUNDLE=$(find .build/release -name "*.bundle" | head -1)
 if [ -n "${ASSETS_BUNDLE}" ]; then
