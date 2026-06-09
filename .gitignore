@@ -1,6 +1,80 @@
+# ============================================================
+# SmartWrite Installer — .gitignore
+# ============================================================
+
+# ------------------------------------------------------------
+# macOS
+# ------------------------------------------------------------
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+Thumbs.db
+
+# ------------------------------------------------------------
+# Swift / Swift Package Manager
+# ------------------------------------------------------------
 .build/
-SmartWrite\ Installer.app/
-*.swp
+.swiftpm/
 *.o
 *.d
+*.swp
+*.swm
+*.swo
+
+# ------------------------------------------------------------
+# Xcode
+# ------------------------------------------------------------
+*.xcodeproj/
+xcuserdata/
+*.xcworkspace/
+DerivedData/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+
+# ------------------------------------------------------------
+# Compiled App Bundles (gerados por build-app.sh)
+# ------------------------------------------------------------
+"SmartWrite Installer.app"/
+SmartWrite\ Installer.app/
+*.app/
+
+# ------------------------------------------------------------
+# Artefatos de release locais (não rastreados; use releases/)
+# ------------------------------------------------------------
+# Os artefatos canônicos ficam em releases/v*/
+# Arquivos temporários de build gerados localmente:
+*.dmg
+*.pkg
+*.zip
+*.tar.gz
+
+# Exceção: releases/ é versionado intencionalmente
+!releases/
+!releases/**/*.dmg
+!releases/**/*.dmg.zip
+!releases/**/*.tar.gz
+!releases/**/*.zip
+!releases/**/*.sh
+!releases/**/*.ps1
+
+# ------------------------------------------------------------
+# Logs e temporários
+# ------------------------------------------------------------
+*.log
+tmp/
+temp/
+
+# ------------------------------------------------------------
+# Backups locais (gerenciados fora do git)
+# ------------------------------------------------------------
+_bkps/
