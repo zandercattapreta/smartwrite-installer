@@ -1,7 +1,16 @@
 #!/bin/bash
 # build-app.sh — SmartWrite Installer — Script de empacotamento do .app
-# Uso: ./build-app.sh
+# Uso: pode ser executado de qualquer diretório:
+#   ./scripts/build-app.sh   (da raiz do projeto)
+#   ./build-app.sh           (dentro de scripts/)
 set -e
+
+# Resolve o diretório raiz do projeto (um nível acima de scripts/)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+# Garante que todos os paths são relativos à raiz do projeto
+cd "${PROJECT_ROOT}"
 
 APP_NAME="SmartWrite Installer"
 BUNDLE="${APP_NAME}.app"
@@ -9,6 +18,7 @@ EXEC_NAME="SmartWriteInstaller"
 ICONSET_DIR="/tmp/SmartWriteInstaller.iconset"
 SRC_ICON="_resources/icon_512x512@2x.png"
 
+echo "📁 Raiz do projeto: ${PROJECT_ROOT}"
 echo "🔨 Compilando projeto (release)..."
 swift build -c release
 
@@ -35,15 +45,15 @@ fi
 if [ -f "${SRC_ICON}" ]; then
   echo "🎨 Gerando ícone..."
   mkdir -p "${ICONSET_DIR}"
-  sips -z 16 16   "${SRC_ICON}" --out "${ICONSET_DIR}/icon_16x16.png"    > /dev/null
-  sips -z 32 32   "${SRC_ICON}" --out "${ICONSET_DIR}/icon_16x16@2x.png" > /dev/null
-  sips -z 32 32   "${SRC_ICON}" --out "${ICONSET_DIR}/icon_32x32.png"    > /dev/null
-  sips -z 64 64   "${SRC_ICON}" --out "${ICONSET_DIR}/icon_32x32@2x.png" > /dev/null
-  sips -z 128 128 "${SRC_ICON}" --out "${ICONSET_DIR}/icon_128x128.png"  > /dev/null
+  sips -z 16 16   "${SRC_ICON}" --out "${ICONSET_DIR}/icon_16x16.png"      > /dev/null
+  sips -z 32 32   "${SRC_ICON}" --out "${ICONSET_DIR}/icon_16x16@2x.png"   > /dev/null
+  sips -z 32 32   "${SRC_ICON}" --out "${ICONSET_DIR}/icon_32x32.png"      > /dev/null
+  sips -z 64 64   "${SRC_ICON}" --out "${ICONSET_DIR}/icon_32x32@2x.png"   > /dev/null
+  sips -z 128 128 "${SRC_ICON}" --out "${ICONSET_DIR}/icon_128x128.png"    > /dev/null
   sips -z 256 256 "${SRC_ICON}" --out "${ICONSET_DIR}/icon_128x128@2x.png" > /dev/null
-  sips -z 256 256 "${SRC_ICON}" --out "${ICONSET_DIR}/icon_256x256.png"  > /dev/null
+  sips -z 256 256 "${SRC_ICON}" --out "${ICONSET_DIR}/icon_256x256.png"    > /dev/null
   sips -z 512 512 "${SRC_ICON}" --out "${ICONSET_DIR}/icon_256x256@2x.png" > /dev/null
-  sips -z 512 512 "${SRC_ICON}" --out "${ICONSET_DIR}/icon_512x512.png"  > /dev/null
+  sips -z 512 512 "${SRC_ICON}" --out "${ICONSET_DIR}/icon_512x512.png"    > /dev/null
   sips -z 1024 1024 "${SRC_ICON}" --out "${ICONSET_DIR}/icon_512x512@2x.png" > /dev/null
   iconutil -c icns "${ICONSET_DIR}" -o "${BUNDLE}/Contents/Resources/AppIcon.icns"
   /usr/libexec/PlistBuddy -c "Set :CFBundleIconFile AppIcon" "${BUNDLE}/Contents/Info.plist" 2>/dev/null || \
