@@ -1,3 +1,15 @@
+// ==============================================================================
+// SCRIPT: ContentView.swift
+// DESCRIÇÃO: View raiz do aplicativo. Renderiza um TabView com duas abas:
+//            "Instalar Plugins" (InstallerTabView) e "Copiar Vault" (VaultCopierTabView).
+//            Também contém InstallerTabView com o header do app e navegação entre steps.
+// CHAMADO POR: SmartWriteInstallerApp.swift → WindowGroup
+// TRAZ (CHAMA/IMPORTA): SwiftUI, InstallerViewModel, VaultCopierViewModel,
+//            Views/* (SelectPluginsView, SelectVaultsView, ConfirmView, InstallingView)
+// CONTRATO (RESPOSTA ESPERADA): Componente de roteamento — não contém lógica de negócio,
+//            apenas orquestra a navegação entre views e expõe os ViewModels como @StateObject.
+// ==============================================================================
+
 import SwiftUI
 
 struct ContentView: View {

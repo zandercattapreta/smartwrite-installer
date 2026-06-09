@@ -1,3 +1,14 @@
+// ==============================================================================
+// SCRIPT: SmartWriteInstallerApp.swift
+// DESCRIÇÃO: Entry point do aplicativo macOS SmartWrite Installer. Configura
+//            a janela principal (sem barra de título, tamanho fixo ao conteúdo)
+//            e registra o comando de menu "Sobre o SmartWrite Installer".
+// CHAMADO POR: @main — ponto de entrada do processo pelo sistema operacional
+// TRAZ (CHAMA/IMPORTA): SwiftUI, AppKit (NSApplication, NSWindow, NSHostingController)
+// CONTRATO (RESPOSTA ESPERADA): Inicializa a cena SwiftUI com ContentView e
+//            expõe a janela "Sobre" via menu de aplicativo personalizado.
+// ==============================================================================
+
 import SwiftUI
 
 @main

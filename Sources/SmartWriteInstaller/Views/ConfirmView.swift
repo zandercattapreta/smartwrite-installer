@@ -1,3 +1,12 @@
+// ==============================================================================
+// SCRIPT: ConfirmView.swift
+// DESCRIÇÃO: Tela de revisão pré-instalação (Step 3 do wizard). Exibe o resumo
+//            dos plugins e vaults selecionados antes de confirmar a instalação.
+// CHAMADO POR: ContentView.swift → InstallerTabView → case .confirm
+// TRAZ (CHAMA/IMPORTA): SwiftUI, InstallerViewModel
+// CONTRATO (RESPOSTA ESPERADA): View de leitura — não modifica estado, apenas exibe.
+// ==============================================================================
+
 import SwiftUI
 
 struct ConfirmView: View {

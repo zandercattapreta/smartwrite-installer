@@ -1,3 +1,12 @@
+// ==============================================================================
+// SCRIPT: AboutView.swift
+// DESCRIÇÃO: Janela "Sobre o SmartWrite Installer" com versão, créditos e links.
+//            Exibida via menu Ajuda → Sobre ou pelo comando registrado no app.
+// CHAMADO POR: SmartWriteInstallerApp.swift → showAboutWindow()
+// TRAZ (CHAMA/IMPORTA): SwiftUI
+// CONTRATO (RESPOSTA ESPERADA): View estática informativa sem estado reativo.
+// ==============================================================================
+
 import SwiftUI
 
 struct AboutView: View {

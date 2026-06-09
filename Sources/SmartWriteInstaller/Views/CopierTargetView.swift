@@ -1,3 +1,12 @@
+// ==============================================================================
+// SCRIPT: CopierTargetView.swift
+// DESCRIÇÃO: Tela de seleção do(s) vault(s) de destino (Step 2 do wizard de cópia).
+//            Permite múltipla seleção, excluindo o vault de origem da lista.
+// CHAMADO POR: VaultCopierTabView.swift → case .selectTarget
+// TRAZ (CHAMA/IMPORTA): SwiftUI, VaultCopierViewModel
+// CONTRATO (RESPOSTA ESPERADA): Atualiza VaultCopierViewModel.targetVaults (Set<UUID>).
+// ==============================================================================
+
 import SwiftUI
 
 struct CopierTargetView: View {

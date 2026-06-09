@@ -1,3 +1,17 @@
+// ==============================================================================
+// SCRIPT: InstallerViewModel.swift
+// DESCRIÇÃO: ViewModel principal do fluxo de instalação de plugins SmartWrite.
+//            Orquestra a descoberta de plugins via GitHub API, a detecção de
+//            vaults do Obsidian e a instalação via git clone/pull com build
+//            automático de dependências npm quando necessário.
+// CHAMADO POR: ContentView.swift → InstallerTabView
+// TRAZ (CHAMA/IMPORTA): Foundation, GitHelpers.swift (GitHelper),
+//            URLSession (GitHub API), FileManager, Process via GitHelper
+// CONTRATO (RESPOSTA ESPERADA): Publica estado reativo via @Published para a UI
+//            de wizard multi-step. Gerencia o ciclo completo: descoberta →
+//            seleção de plugins → seleção de vault → confirmação → instalação.
+// ==============================================================================
+
 import Foundation
 
 @MainActor
@@ -14,58 +28,62 @@ class InstallerViewModel: ObservableObject {
 
     @Published var currentStep: InstallStep = .selectPlugins
 
+    // Proprietário dos repositórios SmartWrite no GitHub
     private let repoOwner = "zandercpzed"
+
+    // Caminho padrão do arquivo de configuração do Obsidian no macOS
     private let obsidianConfigPath = "\(NSHomeDirectory())/Library/Application Support/obsidian/obsidian.json"
 
     enum InstallStep: Int, CaseIterable {
         case selectPlugins = 0
-        case selectVaults = 1
-        case confirm = 2
-        case installing = 3
+        case selectVaults  = 1
+        case confirm       = 2
+        case installing    = 3
 
         var title: String {
             switch self {
             case .selectPlugins: return "Selecionar Plugins"
-            case .selectVaults: return "Selecionar Vaults"
-            case .confirm: return "Confirmar Instalação"
-            case .installing: return "Instalando"
+            case .selectVaults:  return "Selecionar Vaults"
+            case .confirm:       return "Confirmar Instalação"
+            case .installing:    return "Instalando"
             }
         }
 
         var description: String {
             switch self {
             case .selectPlugins: return "Escolha quais plugins SmartWrite instalar"
-            case .selectVaults: return "Escolha em quais vaults do Obsidian instalar"
-            case .confirm: return "Revise suas seleções antes de instalar"
-            case .installing: return "Instalando plugins nos seus vaults"
+            case .selectVaults:  return "Escolha em quais vaults do Obsidian instalar"
+            case .confirm:       return "Revise suas seleções antes de instalar"
+            case .installing:    return "Instalando plugins nos seus vaults"
             }
         }
     }
 
-    // MARK: - Discovery
+    // MARK: - Descoberta de Plugins
 
+    /// Descobre os plugins SmartWrite disponíveis consultando a API pública do GitHub.
+    /// Filtra repositórios pelo padrão de nome e valida a presença de `manifest.json`.
     func discoverPlugins() async {
         installationStatus = .discovering
         addLog("🔍 Descobrindo plugins SmartWrite do GitHub...")
 
         do {
+            // Busca todos os repositórios públicos do owner (limite: 100 por página)
             let url = URL(string: "https://api.github.com/users/\(repoOwner)/repos?per_page=100")!
             let (data, _) = try await URLSession.shared.data(from: url)
 
             let repos = try JSONDecoder().decode([GitHubRepo].self, from: data)
 
-            // Filter repos matching smartwrite pattern
-            let smartWriteRepos = repos.filter { repo in
-                repo.name.hasPrefix("smartwrite-") || repo.name.hasPrefix("smartwriter-")
-            }.filter { repo in
-                repo.name != "smartwrite-installer"
-            }
+            // Filtra repositórios com prefixo smartwrite- ou smartwriter-,
+            // excluindo o próprio instalador para evitar auto-referência circular
+            let smartWriteRepos = repos
+                .filter { $0.name.hasPrefix("smartwrite-") || $0.name.hasPrefix("smartwriter-") }
+                .filter { $0.name != "smartwrite-installer" }
 
             addLog("✓ Encontrou \(smartWriteRepos.count) repositórios")
 
-            // Fetch manifest for each repo
+            // Busca o manifest.json de cada repositório para extrair metadados oficiais
             var plugins: [Plugin] = []
-
             for repo in smartWriteRepos {
                 if let plugin = await fetchPluginManifest(repo: repo) {
                     plugins.append(plugin)
@@ -83,6 +101,8 @@ class InstallerViewModel: ObservableObject {
         }
     }
 
+    /// Busca e decodifica o `manifest.json` de um repositório para obter os metadados do plugin.
+    /// Retorna `nil` silenciosamente se o repositório não possuir manifesto válido.
     private func fetchPluginManifest(repo: GitHubRepo) async -> Plugin? {
         let manifestURL = URL(string: "https://raw.githubusercontent.com/\(repoOwner)/\(repo.name)/main/manifest.json")!
 
@@ -91,87 +111,81 @@ class InstallerViewModel: ObservableObject {
             let manifest = try JSONDecoder().decode(PluginManifest.self, from: data)
 
             return Plugin(
-                id: manifest.id,
-                name: manifest.name,
+                id:          manifest.id,
+                name:        manifest.name,
                 description: manifest.description ?? "Nenhuma descrição disponível",
-                repoUrl: repo.cloneUrl
+                repoUrl:     repo.cloneUrl
             )
         } catch {
-            // Skip repos without valid manifest
+            // Repositórios sem manifest.json válido são ignorados silenciosamente
             return nil
         }
     }
 
-    // MARK: - Vault Detection
+    // MARK: - Detecção de Vaults
 
+    /// Detecta os vaults do Obsidian registrados na máquina lendo o `obsidian.json`.
+    /// Delega a lógica de leitura ao `GitHelper` como ponto único de implementação.
     func detectVaults() {
         addLog("🔍 Detectando vaults do Obsidian...")
 
-        let fileManager = FileManager.default
-
-        guard fileManager.fileExists(atPath: obsidianConfigPath) else {
-            addLog("⚠ Nenhuma configuração do Obsidian encontrada no local padrão")
-            return
-        }
-
         do {
-            let data = try Data(contentsOf: URL(fileURLWithPath: obsidianConfigPath))
-            let config = try JSONDecoder().decode(ObsidianConfig.self, from: data)
+            let vaults = try GitHelper.detectVaults(fromConfigAt: obsidianConfigPath)
 
-            let vaults = config.vaults.values.compactMap { info -> ObsidianVault? in
-                let expandedPath = NSString(string: info.path).expandingTildeInPath
-                guard fileManager.fileExists(atPath: expandedPath) else { return nil }
-                return ObsidianVault(path: expandedPath)
+            guard !vaults.isEmpty else {
+                addLog("⚠ Nenhuma configuração do Obsidian encontrada no local padrão")
+                return
             }
 
             availableVaults = vaults
             addLog("✓ Encontrou \(vaults.count) vault(s)")
-
-            for vault in vaults {
-                addLog("  → \(vault.name)")
-            }
+            for vault in vaults { addLog("  → \(vault.name)") }
 
         } catch {
             addLog("✗ Erro ao ler a configuração do Obsidian: \(error.localizedDescription)")
         }
     }
 
-    // MARK: - Manual Vault
+    // MARK: - Vault Manual
 
+    /// Adiciona um vault informado manualmente pelo usuário à lista de vaults disponíveis.
+    /// Valida a existência do diretório no disco e evita duplicatas na lista.
     func addManualVault(path: String) {
         let expandedPath = NSString(string: path.trimmingCharacters(in: .whitespaces)).expandingTildeInPath
-        let fileManager = FileManager.default
-        guard fileManager.fileExists(atPath: expandedPath) else {
+
+        guard FileManager.default.fileExists(atPath: expandedPath) else {
             addLog("⚠ Caminho não encontrado: \(expandedPath)")
             return
         }
+
         let vault = ObsidianVault(path: expandedPath)
-        if !availableVaults.contains(where: { $0.path == expandedPath }) {
-            availableVaults.append(vault)
-            selectedVaults.insert(vault.id)
-            addLog("✓ Vault adicionado manualmente: \(vault.name)")
-        } else {
+
+        guard !availableVaults.contains(where: { $0.path == expandedPath }) else {
             addLog("⚠ Vault já listado: \(vault.name)")
+            return
         }
+
+        availableVaults.append(vault)
+        selectedVaults.insert(vault.id)
+        addLog("✓ Vault adicionado manualmente: \(vault.name)")
     }
 
-    // MARK: - Custom Plugin
+    // MARK: - Plugin Personalizado
 
+    /// Adiciona um plugin a partir de uma URL de repositório GitHub informada pelo usuário.
+    /// Tenta carregar o `manifest.json` remoto; se falhar, cadastra com metadados mínimos.
     func addCustomPlugin() async {
         guard !customRepoURL.isEmpty else { return }
 
         addLog("🔍 Verificando repositório personalizado: \(customRepoURL)")
 
-        // Clean URL
+        // Normaliza a URL: remove .git, espaços e barras finais
         var cleanURL = customRepoURL
             .trimmingCharacters(in: .whitespaces)
             .replacingOccurrences(of: ".git", with: "")
+        if cleanURL.hasSuffix("/") { cleanURL.removeLast() }
 
-        if cleanURL.hasSuffix("/") {
-            cleanURL.removeLast()
-        }
-
-        // Extract owner/repo
+        // Extrai o segmento owner/repo da URL do GitHub
         guard let repoPath = cleanURL.components(separatedBy: "github.com/").last else {
             addLog("✗ URL do GitHub inválida")
             return
@@ -183,10 +197,10 @@ class InstallerViewModel: ObservableObject {
             return
         }
 
-        let owner = String(parts[0])
+        let owner    = String(parts[0])
         let repoName = String(parts[1])
 
-        // Try fetching manifest
+        // Tenta carregar o manifest.json para usar os metadados oficiais do plugin
         let manifestURL = URL(string: "https://raw.githubusercontent.com/\(owner)/\(repoName)/main/manifest.json")!
 
         do {
@@ -194,13 +208,13 @@ class InstallerViewModel: ObservableObject {
             let manifest = try JSONDecoder().decode(PluginManifest.self, from: data)
 
             let plugin = Plugin(
-                id: manifest.id,
-                name: manifest.name,
+                id:          manifest.id,
+                name:        manifest.name,
                 description: manifest.description ?? "Plugin personalizado",
-                repoUrl: "\(cleanURL).git"
+                repoUrl:     "\(cleanURL).git"
             )
 
-            // Check if already exists
+            // Evita duplicatas — verifica se o plugin já está na lista pelo ID
             if discoveredPlugins.contains(where: { $0.id == plugin.id }) {
                 addLog("⚠ O plugin '\(plugin.name)' já está na lista")
             } else {
@@ -212,12 +226,12 @@ class InstallerViewModel: ObservableObject {
             customRepoURL = ""
 
         } catch {
-            // Fallback: add without manifest
+            // Fallback: registra o plugin sem manifest usando o nome do repositório como ID
             let plugin = Plugin(
-                id: repoName,
-                name: repoName,
+                id:          repoName,
+                name:        repoName,
                 description: "Plugin personalizado (nenhum manifesto encontrado)",
-                repoUrl: "\(cleanURL).git"
+                repoUrl:     "\(cleanURL).git"
             )
 
             discoveredPlugins.append(plugin)
@@ -227,11 +241,14 @@ class InstallerViewModel: ObservableObject {
         }
     }
 
-    // MARK: - Installation
+    // MARK: - Instalação
 
+    /// Executa a instalação dos plugins selecionados nos vaults escolhidos.
+    /// Para cada par (plugin × vault): realiza `git clone` (novo) ou `git pull` (existente)
+    /// e dispara build automático via `GitHelper` se `main.js` não estiver presente.
     func install() async {
         let pluginsToInstall = discoveredPlugins.filter { selectedPlugins.contains($0.id) }
-        let vaultsToInstall = availableVaults.filter { selectedVaults.contains($0.id) }
+        let vaultsToInstall  = availableVaults.filter { selectedVaults.contains($0.id) }
 
         guard !pluginsToInstall.isEmpty && !vaultsToInstall.isEmpty else {
             addLog("✗ Nenhum plugin ou vault selecionado")
@@ -245,9 +262,9 @@ class InstallerViewModel: ObservableObject {
         addLog("Vaults: \(vaultsToInstall.count)")
         addLog("")
 
-        var successCount = 0
-        var failCount = 0
-        let totalOperations = pluginsToInstall.count * vaultsToInstall.count
+        var successCount     = 0
+        var failCount        = 0
+        let totalOperations  = pluginsToInstall.count * vaultsToInstall.count
         var currentOperation = 0
 
         for vault in vaultsToInstall {
@@ -255,7 +272,7 @@ class InstallerViewModel: ObservableObject {
 
             let pluginDir = "\(vault.path)/.obsidian/plugins"
 
-            // Create plugins directory if needed
+            // Garante que o diretório .obsidian/plugins existe antes de instalar
             try? FileManager.default.createDirectory(
                 atPath: pluginDir,
                 withIntermediateDirectories: true
@@ -265,7 +282,7 @@ class InstallerViewModel: ObservableObject {
                 currentOperation += 1
                 installationStatus = .installing(
                     current: currentOperation,
-                    total: totalOperations,
+                    total:   totalOperations,
                     message: "Instalando \(plugin.name) em \(vault.name)..."
                 )
 
@@ -274,14 +291,14 @@ class InstallerViewModel: ObservableObject {
                 do {
                     if FileManager.default.fileExists(atPath: targetDir) {
                         addLog("  ↻ Atualizando \(plugin.name)...")
-                        try await updatePlugin(at: targetDir)
+                        try await GitHelper.updatePlugin(at: targetDir)
                     } else {
                         addLog("  ⬇ Instalando \(plugin.name)...")
-                        try await clonePlugin(url: plugin.repoUrl, to: targetDir)
+                        try await GitHelper.clonePlugin(url: plugin.repoUrl, to: targetDir)
                     }
 
-                    // Check if build is needed
-                    try await buildPluginIfNeeded(at: targetDir, name: plugin.name)
+                    // Compila o plugin caso main.js não esteja presente na branch clonada
+                    try await GitHelper.buildPluginIfNeeded(at: targetDir, name: plugin.name) { self.addLog($0) }
 
                     addLog("  ✓ Concluído")
                     successCount += 1
@@ -298,105 +315,19 @@ class InstallerViewModel: ObservableObject {
         installationStatus = .completed(success: successCount, failed: failCount)
         addLog("🎉 Instalação concluída!")
         addLog("✓ Sucesso: \(successCount)")
-        if failCount > 0 {
-            addLog("✗ Falha: \(failCount)")
-        }
+        if failCount > 0 { addLog("✗ Falha: \(failCount)") }
         addLog("\nPor favor, reinicie o Obsidian ou recarregue os plugins.")
     }
 
-    private func clonePlugin(url: String, to path: String) async throws {
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/git")
-        process.arguments = ["clone", url, path]
+    // MARK: - Navegação
 
-        let pipe = Pipe()
-        process.standardError = pipe
-
-        try process.run()
-        process.waitUntilExit()
-
-        if process.terminationStatus != 0 {
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            let error = String(data: data, encoding: .utf8) ?? "Unknown error"
-            throw NSError(domain: "git", code: Int(process.terminationStatus), userInfo: [NSLocalizedDescriptionKey: error])
-        }
-    }
-
-    private func updatePlugin(at path: String) async throws {
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/git")
-        process.arguments = ["pull"]
-        process.currentDirectoryURL = URL(fileURLWithPath: path)
-
-        try process.run()
-        process.waitUntilExit()
-
-        if process.terminationStatus != 0 {
-            throw NSError(domain: "git", code: Int(process.terminationStatus))
-        }
-    }
-
-    private func buildPluginIfNeeded(at path: String, name: String) async throws {
-        let mainJsPath = "\(path)/main.js"
-        let packageJsonPath = "\(path)/package.json"
-
-        // If main.js exists, no build needed
-        if FileManager.default.fileExists(atPath: mainJsPath) {
-            return
-        }
-
-        // If no package.json, no build possible
-        guard FileManager.default.fileExists(atPath: packageJsonPath) else {
-            return
-        }
-
-        addLog("    🔨 Compilando \(name)...")
-
-        // Check if npm is available
-        guard FileManager.default.fileExists(atPath: "/usr/local/bin/npm") ||
-              FileManager.default.fileExists(atPath: "/opt/homebrew/bin/npm") else {
-            addLog("    ⚠ npm não encontrado, pulando compilação")
-            return
-        }
-
-        // Run npm install
-        try await runCommand("/bin/sh", args: ["-c", "cd '\(path)' && npm install --silent"])
-
-        // Run npm build
-        try await runCommand("/bin/sh", args: ["-c", "cd '\(path)' && npm run build --silent"])
-
-        if FileManager.default.fileExists(atPath: mainJsPath) {
-            addLog("    ✓ Compilação concluída")
-        } else {
-            addLog("    ⚠ Compilação concluída, mas main.js não encontrado")
-        }
-    }
-
-    private func runCommand(_ command: String, args: [String]) async throws {
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: command)
-        process.arguments = args
-
-        try process.run()
-        process.waitUntilExit()
-
-        if process.terminationStatus != 0 {
-            throw NSError(domain: "command", code: Int(process.terminationStatus))
-        }
-    }
-
-    // MARK: - Navigation
-
+    /// Indica se o usuário pode avançar para o próximo passo do wizard.
     func canContinue() -> Bool {
         switch currentStep {
-        case .selectPlugins:
-            return !selectedPlugins.isEmpty
-        case .selectVaults:
-            return !selectedVaults.isEmpty
-        case .confirm:
-            return true
-        case .installing:
-            return false
+        case .selectPlugins: return !selectedPlugins.isEmpty
+        case .selectVaults:  return !selectedVaults.isEmpty
+        case .confirm:       return true
+        case .installing:    return false
         }
     }
 
@@ -412,14 +343,15 @@ class InstallerViewModel: ObservableObject {
         }
     }
 
-    // MARK: - Logging
+    // MARK: - Log Interno
 
     private func addLog(_ message: String) {
         installationLog.append(message)
     }
 
-    // MARK: - Helper Models
+    // MARK: - Modelos Internos
 
+    /// Representa um repositório retornado pela API REST do GitHub.
     private struct GitHubRepo: Codable {
         let name: String
         let cloneUrl: String
@@ -430,6 +362,7 @@ class InstallerViewModel: ObservableObject {
         }
     }
 
+    /// Representa o `manifest.json` nativo do Obsidian, usado para extrair metadados do plugin.
     private struct PluginManifest: Codable {
         let id: String
         let name: String

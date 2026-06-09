@@ -1,3 +1,12 @@
+// ==============================================================================
+// SCRIPT: CopierSourceView.swift
+// DESCRIÇÃO: Tela de seleção do vault de origem (Step 1 do wizard de cópia).
+//            Lista os vaults detectados e permite ao usuário escolher o vault base.
+// CHAMADO POR: VaultCopierTabView.swift → case .selectSource
+// TRAZ (CHAMA/IMPORTA): SwiftUI, VaultCopierViewModel
+// CONTRATO (RESPOSTA ESPERADA): Atualiza VaultCopierViewModel.sourceVault com a seleção.
+// ==============================================================================
+
 import SwiftUI
 
 struct CopierSourceView: View {

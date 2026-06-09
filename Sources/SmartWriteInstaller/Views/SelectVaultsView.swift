@@ -1,3 +1,14 @@
+// ==============================================================================
+// SCRIPT: SelectVaultsView.swift
+// DESCRIÇÃO: Tela de seleção de vaults (Step 2 do wizard de instalação).
+//            Lista os vaults detectados automaticamente e permite adicionar
+//            vault manualmente via campo de texto de caminho absoluto.
+// CHAMADO POR: ContentView.swift → InstallerTabView → case .selectVaults
+// TRAZ (CHAMA/IMPORTA): SwiftUI, InstallerViewModel (detectVaults, addManualVault)
+// CONTRATO (RESPOSTA ESPERADA): Atualiza InstallerViewModel.selectedVaults (Set<UUID>).
+//            Dispara detectVaults() no onAppear para auto-descoberta.
+// ==============================================================================
+
 import SwiftUI
 
 struct SelectVaultsView: View {

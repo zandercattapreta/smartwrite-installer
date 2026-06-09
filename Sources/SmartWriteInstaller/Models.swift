@@ -1,3 +1,13 @@
+// ==============================================================================
+// SCRIPT: Models.swift
+// DESCRIÇÃO: Definições de tipos de dados compartilhados usados por todos os
+//            ViewModels e Views do SmartWrite Installer.
+// CHAMADO POR: InstallerViewModel.swift, VaultCopierViewModel.swift, Views/*
+// TRAZ (CHAMA/IMPORTA): Foundation
+// CONTRATO (RESPOSTA ESPERADA): Structs e enums de domínio: Plugin, ObsidianVault,
+//            ObsidianConfig e InstallationStatus. Sem lógica de negócio — apenas dados.
+// ==============================================================================
+
 import Foundation
 
 // MARK: - Models

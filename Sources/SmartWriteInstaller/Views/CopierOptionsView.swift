@@ -1,3 +1,13 @@
+// ==============================================================================
+// SCRIPT: CopierOptionsView.swift
+// DESCRIÇÃO: Tela de seleção de itens a copiar (Step 3 do wizard de cópia).
+//            Permite ao usuário escolher: plugins, preferências, snippets CSS
+//            e lista de plugins ativos (community-plugins.json).
+// CHAMADO POR: VaultCopierTabView.swift → case .selectOptions
+// TRAZ (CHAMA/IMPORTA): SwiftUI, VaultCopierViewModel
+// CONTRATO (RESPOSTA ESPERADA): Modifica VaultCopierViewModel.copyOptions via bindings.
+// ==============================================================================
+
 import SwiftUI
 
 struct CopierOptionsView: View {

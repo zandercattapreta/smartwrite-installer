@@ -1,3 +1,15 @@
+// ==============================================================================
+// SCRIPT: VaultCopierTabView.swift
+// DESCRIÇÃO: Container da aba "Copiar Vault". Renderiza o header da aba,
+//            a StepperBarView e o conteúdo de cada step do wizard de cópia.
+//            Também gerencia a barra de navegação inferior (Voltar / Iniciar Cópia).
+// CHAMADO POR: ContentView.swift → TabView → aba "Copiar Vault"
+// TRAZ (CHAMA/IMPORTA): SwiftUI, VaultCopierViewModel,
+//            Views (CopierSourceView, CopierTargetView, CopierOptionsView, CopierProgressView)
+// CONTRATO (RESPOSTA ESPERADA): Orquestra a navegação entre os 4 steps do wizard de cópia.
+//            Dispara vm.startCopy() ao avançar do step de opções para o de progresso.
+// ==============================================================================
+
 import SwiftUI
 
 struct VaultCopierTabView: View {

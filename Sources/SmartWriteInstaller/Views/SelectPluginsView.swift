@@ -1,3 +1,14 @@
+// ==============================================================================
+// SCRIPT: SelectPluginsView.swift
+// DESCRIÇÃO: Tela de seleção de plugins (Step 1 do wizard de instalação).
+//            Lista os plugins descobertos via GitHub API, permite seleção múltipla
+//            e oferece campo para adicionar plugin por URL personalizada.
+// CHAMADO POR: ContentView.swift → InstallerTabView → case .selectPlugins
+// TRAZ (CHAMA/IMPORTA): SwiftUI, InstallerViewModel (discoverPlugins, addCustomPlugin)
+// CONTRATO (RESPOSTA ESPERADA): Atualiza InstallerViewModel.selectedPlugins (Set<String>).
+//            Dispara discoverPlugins() no onAppear se a lista estiver vazia.
+// ==============================================================================
+
 import SwiftUI
 
 struct SelectPluginsView: View {

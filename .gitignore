@@ -75,6 +75,14 @@ tmp/
 temp/
 
 # ------------------------------------------------------------
+# Pastas Protegidas — Local-Only (Regra 6 das Regras de Ouro)
+# ------------------------------------------------------------
+# _docs/      → documentação interna de gestão e produto
+# _resources/ → assets brutos (ícone fonte, referências)
+_docs/
+_resources/
+
+# ------------------------------------------------------------
 # Backups locais (gerenciados fora do git)
 # ------------------------------------------------------------
 _bkps/

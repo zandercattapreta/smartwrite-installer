@@ -1,3 +1,13 @@
+// ==============================================================================
+// SCRIPT: CopierProgressView.swift
+// DESCRIÇÃO: Tela de progresso da operação de cópia de vault (Step 4 do wizard).
+//            Exibe barra de progresso, log em tempo real e resultado final.
+// CHAMADO POR: VaultCopierTabView.swift → case .copying
+// TRAZ (CHAMA/IMPORTA): SwiftUI, VaultCopierViewModel
+// CONTRATO (RESPOSTA ESPERADA): View reativa ao VaultCopierViewModel.copyStatus e
+//            VaultCopierViewModel.copyLog. Sem ações — apenas visualização.
+// ==============================================================================
+
 import SwiftUI
 
 struct CopierProgressView: View {

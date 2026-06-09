@@ -1,7 +1,17 @@
 #!/bin/bash
+# ==============================================================================
 # SCRIPT: install.sh
-# DESCRIÇÃO: Instalador dinâmico para a suíte SmartWrite no Obsidian.
-# CONTRATO: Requer jq, curl e git instalados.
+# DESCRIÇÃO: Instalador dinâmico da suíte SmartWrite para o Obsidian.
+#            Descobre plugins via GitHub API, detecta vaults automaticamente
+#            e instala/atualiza via git clone/pull com build automático npm.
+# CHAMADO POR: Terminal do usuário — execução direta: ./install.sh
+#              Flags: --build / -b  → força recompilação mesmo se main.js existir
+# TRAZ (CHAMA/IMPORTA): bash, curl (GitHub API), jq (parsing JSON),
+#                        git (clone/pull), npm (install + build de plugins)
+# CONTRATO (RESPOSTA ESPERADA): Instala ou atualiza os plugins SmartWrite
+#            selecionados pelo usuário nos vaults do Obsidian indicados.
+#            Saída: mensagens de progresso no terminal. Exit 0 = sucesso.
+# ==============================================================================
 
 # Configuration
 REPO_OWNER="zandercpzed"
@@ -106,6 +116,22 @@ for idx in "${PLUGIN_SELECTIONS[@]}"; do
 done
 
 # 4. Installation & Build Logic
+# ------------------------------------------------------------------------------
+# check_and_build()
+# Verifica se um plugin precisa ser compilado e executa npm install + npm run build.
+#
+# Parâmetros:
+#   $1 — DIR:  Caminho absoluto do diretório do plugin (onde package.json está)
+#   $2 — NAME: Nome do plugin (apenas para exibição nos logs)
+#
+# Comportamento:
+#   - Se main.js existir e FORCE_BUILD=false → retorna 0 sem fazer nada
+#   - Se package.json não existir → retorna 0 sem fazer nada
+#   - Caso contrário: executa npm install e npm run build (se script "build" existir)
+#   - Verifica se main.js foi gerado após o build como confirmação
+#
+# Retorno: 0 (sucesso) | 1 (falha em npm install, npm build ou main.js ausente)
+# ------------------------------------------------------------------------------
 check_and_build() {
     local DIR="$1"
     local NAME="$2"

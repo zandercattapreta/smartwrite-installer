@@ -1,3 +1,14 @@
+// ==============================================================================
+// SCRIPT: InstallingView.swift
+// DESCRIÇÃO: Tela de progresso da instalação de plugins (Step 4 do wizard).
+//            Exibe barra de progresso animada, log de operações em tempo real
+//            e tela de resultado com contagem de sucesso/falha.
+// CHAMADO POR: ContentView.swift → InstallerTabView → case .installing
+// TRAZ (CHAMA/IMPORTA): SwiftUI, InstallerViewModel
+// CONTRATO (RESPOSTA ESPERADA): View reativa ao InstallerViewModel.installationStatus
+//            e installationLog. Dispara vm.install() via .task no onAppear.
+// ==============================================================================
+
 import SwiftUI
 
 struct InstallingView: View {

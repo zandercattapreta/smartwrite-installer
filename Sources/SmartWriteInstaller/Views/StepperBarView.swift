@@ -1,3 +1,14 @@
+// ==============================================================================
+// SCRIPT: StepperBarView.swift
+// DESCRIÇÃO: Barra de progresso visual multi-step usada em ambos os wizards.
+//            Exibe os passos numerados com indicação do step atual (ativo/concluído).
+// CHAMADO POR: ContentView.swift → InstallerTabView,
+//              VaultCopierTabView.swift
+// TRAZ (CHAMA/IMPORTA): SwiftUI
+// CONTRATO (RESPOSTA ESPERADA): Componente visual puro — recebe currentStep: Int
+//            e um array de títulos. Sem estado próprio, sem side effects.
+// ==============================================================================
+
 import SwiftUI
 
 struct StepperBarView: View {
