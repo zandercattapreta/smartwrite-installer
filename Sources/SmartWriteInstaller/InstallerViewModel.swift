@@ -14,7 +14,8 @@ class InstallerViewModel: ObservableObject {
 
     @Published var currentStep: InstallStep = .selectPlugins
 
-    private let repoOwner = "zandercpzed"
+    private let repoOwner = "zandercattapreta"
+    private let whisperInstaller = WhisperInstaller()
     private let obsidianConfigPath = "\(NSHomeDirectory())/Library/Application Support/obsidian/obsidian.json"
 
     enum InstallStep: Int, CaseIterable {
@@ -302,6 +303,11 @@ class InstallerViewModel: ObservableObject {
             addLog("✗ Falha: \(failCount)")
         }
         addLog("\nPor favor, reinicie o Obsidian ou recarregue os plugins.")
+
+        // Install whisper.cpp and download the small model for Dictation
+        await whisperInstaller.setup(onLog: { [weak self] message in
+            self?.addLog(message)
+        })
     }
 
     private func clonePlugin(url: String, to path: String) async throws {

@@ -4,7 +4,7 @@
 # CONTRATO: Requer jq, curl e git instalados.
 
 # Configuration
-REPO_OWNER="zandercpzed"
+REPO_OWNER="zandercattapreta"
 FORCE_BUILD=false
 
 # Check for flags
@@ -169,3 +169,70 @@ for TARGET_VAULT in "${SELECTED_VAULTS[@]}"; do
 done
 
 echo -e "\n${GREEN}Process Complete.${NC} Please check Obsidian."
+
+# ============================================================
+# [5/5] Install whisper.cpp + Whisper model (for Dictation)
+# ============================================================
+echo -e "\n${BLUE}[5/5] Setting up SmartWrite Dictation (whisper.cpp)...${NC}"
+
+install_whisper() {
+    # Check Homebrew
+    if ! command -v brew &>/dev/null; then
+        echo -e "  ${RED}⚠ Homebrew not found. Install it at https://brew.sh${NC}"
+        echo -e "  Then run manually: brew install whisper-cpp"
+        return 1
+    fi
+
+    # Install whisper-cpp if not present
+    if command -v whisper-cli &>/dev/null; then
+        echo -e "  ${GREEN}✓ whisper-cpp already installed${NC}"
+    else
+        echo "  ⬇ Installing whisper-cpp via Homebrew..."
+        brew install whisper-cpp
+        if [ $? -ne 0 ]; then
+            echo -e "  ${RED}✗ Failed to install whisper-cpp${NC}"
+            return 1
+        fi
+        echo -e "  ${GREEN}✓ whisper-cpp installed${NC}"
+    fi
+
+    # Determine models directory (Homebrew standard)
+    if [ -d "/opt/homebrew" ]; then
+        MODELS_DIR="/opt/homebrew/share/whisper.cpp/models"
+    else
+        MODELS_DIR="/usr/local/share/whisper.cpp/models"
+    fi
+    MODEL_FILE="$MODELS_DIR/ggml-small.bin"
+
+    # Download model if not present
+    if [ -f "$MODEL_FILE" ]; then
+        echo -e "  ${GREEN}✓ Whisper model 'small' already present${NC}"
+    else
+        echo "  ⬇ Downloading Whisper model 'small' (~466 MB)..."
+        mkdir -p "$MODELS_DIR"
+
+        # Try the Homebrew-bundled download script first
+        DOWNLOAD_SCRIPT="$(brew --prefix)/bin/download-ggml-model"
+        if [ -f "$DOWNLOAD_SCRIPT" ]; then
+            bash "$DOWNLOAD_SCRIPT" small "$MODELS_DIR"
+        else
+            # Fallback: pipe from GitHub
+            curl -fsSL https://raw.githubusercontent.com/ggml-org/whisper.cpp/master/models/download-ggml-model.sh \
+                | bash -s small "$MODELS_DIR"
+        fi
+
+        if [ -f "$MODEL_FILE" ]; then
+            echo -e "  ${GREEN}✓ Model 'small' ready${NC}"
+        else
+            echo -e "  ${RED}✗ Model download failed. Download manually:${NC}"
+            echo -e "     https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small.bin"
+            echo -e "     → save to $MODEL_FILE"
+        fi
+    fi
+
+    echo -e "  ${GREEN}🎙 Dictation ready!${NC}"
+}
+
+install_whisper
+echo -e "\n${GREEN}All done!${NC} Restart Obsidian to activate SmartWrite."
+
